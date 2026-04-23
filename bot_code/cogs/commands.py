@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
+from config import STYLES
 
 class CommandCog(commands.Cog):
     def __init__(self, bot):
@@ -69,8 +70,8 @@ class CommandCog(commands.Cog):
             await interaction.response.send_message("VoiceCogがないよ")
             return
 
-        if new_style in voice.style_options:
-            voice.set_style(voice.style_options[new_style])
+        if new_style in STYLES:
+            voice.set_style(STYLES[new_style])
             await interaction.response.send_message(f"{new_style}スタイルだね！")
         else:
             await interaction.response.send_message("そのスタイルしらない…")
@@ -93,7 +94,7 @@ class CommandCog(commands.Cog):
 
         return [
             app_commands.Choice(name=style, value=style)
-            for style in voice.style_options.keys()
+            for style in STYLES.keys()
             if current in style
         ]
     

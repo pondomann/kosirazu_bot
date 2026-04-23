@@ -7,6 +7,7 @@ import asyncio
 
 import tts
 import utils
+from config import DEFAULT_STYLE_ID
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -14,6 +15,7 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 AUDIO_DIR = os.path.join(ROOT_DIR, "audio")
 
 os.makedirs(AUDIO_DIR, exist_ok=True)
+
 
 class VoiceCog(commands.Cog):
     def __init__(self, bot):
@@ -23,16 +25,7 @@ class VoiceCog(commands.Cog):
         self.vc = None  # VoiceClient
         self.text_channel_id = None
         self.last_speaker = None
-        self.style_id = 194063739
-
-        self.style_options = {
-            "通常": "194063739",
-            "ふきげん": "194063741",
-            "よろこび": "194063742",
-            "いじわる": "194063744",
-            "へろへろ": "194063745",
-        }
-
+        self.style_id = DEFAULT_STYLE_ID
 
 
     # --------------------
@@ -64,7 +57,6 @@ class VoiceCog(commands.Cog):
         self.queue.clear()
         self.is_playing = False
         self.last_speaker = None
-
 
 
     # --------------------
@@ -115,6 +107,7 @@ class VoiceCog(commands.Cog):
             if before.channel == self.vc.channel:
                 await self.speak(f"ばいばい{display_name}")
 
+
     # --------------------
     # 読み上げ
     # --------------------
@@ -137,6 +130,7 @@ class VoiceCog(commands.Cog):
 
         if not self.is_playing:
             await self.play_next()
+
 
     # --------------------
     # 再生
