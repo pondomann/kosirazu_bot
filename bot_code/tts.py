@@ -1,12 +1,10 @@
-import json
-import requests
+import aiohttp
 from io import BytesIO
-from config import KOSIRAZU_SPEAKER_UUID
-from config import COEIROINK_API_URL
+from config import COEIROINK_API_URL, KOSIRAZU_SPEAKER_UUID
 
 
-def talk(text, style_id):
-    
+async def talk(session, text, style_id):
+
     query = {
         "speakerUuid": KOSIRAZU_SPEAKER_UUID,
         "styleId": style_id,
@@ -21,14 +19,15 @@ def talk(text, style_id):
         "outputSamplingRate": 24000,
     }
 
- # 音声合成を実行
-    response = requests.post(
-        COEIROINK_API_URL,
-        headers={"Content-Type": "application/json"},
-        data=json.dumps(query),
-    )
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
+            COEIROINK_API_URL,
+            headers={"Content-Type": "application/json"},
+            json=query,
+        ) as response:
 
-    response.raise_for_status()
+            response.raise_for_status()
 
-    # 音声をメモリ内に保存し、返す
-    return BytesIO(response.content)
+            audio_bytes = await response.read()
+
+    return BytesIO(audio_bytes)

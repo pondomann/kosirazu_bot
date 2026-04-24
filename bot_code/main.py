@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
+import asyncio
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -43,4 +44,17 @@ async def on_ready():
 
 bot.setup_hook = setup_hook
 
-bot.run(TOKEN)
+async def main():
+    try:
+        async with bot:
+            await bot.start(TOKEN)
+    except KeyboardInterrupt:
+        print("Shutting down...")
+        await bot.close()
+
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Stopped by user")

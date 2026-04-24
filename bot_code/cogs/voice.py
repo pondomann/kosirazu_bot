@@ -4,6 +4,7 @@ from collections import deque
 import os
 import uuid
 import asyncio
+import aiohttp
 
 import tts
 import utils
@@ -20,12 +21,21 @@ os.makedirs(AUDIO_DIR, exist_ok=True)
 class VoiceCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.session = aiohttp.ClientSession()
         self.queue = deque()
         self.is_playing = False
         self.vc = None  # VoiceClient
         self.text_channel_id = None
         self.last_speaker = None
         self.style_id = DEFAULT_STYLE_ID
+
+
+    # --------------------
+    # ボット終了時の手続き
+    # --------------------
+    async def cog_unload(self):
+        print("Session closing...")
+        await self.session.close()
 
 
     # --------------------
@@ -114,8 +124,15 @@ class VoiceCog(commands.Cog):
     async def speak(self, text):
         if not self.vc:
             return
+        
 
-        audio_data = tts.talk(text, self.style_id)
+        try:
+            audio_data = await tts.talk(self.session, text, self.style_id)
+
+        except Exception as e:
+            print(f"TTS error: {e}")
+            return
+
 
         filename = f"{uuid.uuid4()}.wav"
         file_path = os.path.join(AUDIO_DIR, filename)
@@ -139,6 +156,11 @@ class VoiceCog(commands.Cog):
         if not self.queue:
             self.is_playing = False
             return
+        
+        if not self.vc or not self.vc.is_connected():
+            print("VC not connected (play_next)")
+            self.is_playing = False
+            return
 
         self.is_playing = True
         path = self.queue.popleft()
@@ -146,6 +168,8 @@ class VoiceCog(commands.Cog):
         def after_play(e):
             if e:
                 print(f"[PLAY ERROR] {e}")
+            else:
+                print("再生完了")
 
             try:
                 os.remove(path)
@@ -153,14 +177,11 @@ class VoiceCog(commands.Cog):
                 print(f"[DELETE ERROR] {e}")
 
 
-            fut = asyncio.run_coroutine_threadsafe(
+            asyncio.run_coroutine_threadsafe(
                 self.play_next(),
                 self.bot.loop
             )
-            try:
-                fut.result()
-            except Exception as e:
-                print(f"[NEXT ERROR] {e}")
+
 
         self.vc.play(
             discord.FFmpegPCMAudio(path),
