@@ -28,6 +28,7 @@ class VoiceCog(commands.Cog):
         self.text_channel_id = None
         self.last_speaker = None
         self.style_id = DEFAULT_STYLE_ID
+        self.semaphore = asyncio.Semaphore(2)
 
 
     # --------------------
@@ -119,19 +120,30 @@ class VoiceCog(commands.Cog):
 
 
     # --------------------
-    # 読み上げ
+    # 非同期で読み上げ
     # --------------------
     async def speak(self, text):
         if not self.vc:
             return
         
-
-        try:
-            audio_data = await tts.talk(self.session, text, self.style_id)
-
-        except Exception as e:
-            print(f"TTS error: {e}")
+        if len(self.queue) >= 4:
+            print("キュー上限")
             return
+
+        asyncio.create_task(self._prepare_audio(text))
+
+
+    # --------------------
+    # キューに追加（読み上げ）
+    # --------------------
+    async def _prepare_audio(self, text):
+        async with self.semaphore:
+            try:
+                audio_data = await tts.talk(self.session, text, self.style_id)
+
+            except Exception as e:
+                print(f"TTS error: {e}")
+                return
 
 
         filename = f"{uuid.uuid4()}.wav"
@@ -150,7 +162,7 @@ class VoiceCog(commands.Cog):
 
 
     # --------------------
-    # 再生
+    # 再生（読み上げ）
     # --------------------
     async def play_next(self):
         if not self.queue:
