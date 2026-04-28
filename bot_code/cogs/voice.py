@@ -92,7 +92,7 @@ class VoiceCog(commands.Cog):
         else:
             text_to_speak = f"{display_name}: {processed_message}"
 
-        await self.speak(text_to_speak)
+        await self.request_speech(text_to_speak)
 
         self.last_speaker = display_name
 
@@ -112,40 +112,65 @@ class VoiceCog(commands.Cog):
 
         if before.channel is None and after.channel is not None:
             if after.channel == self.vc.channel:
-                await self.speak(f"いまきたのは{display_name}だよ")
+                await self.request_speech(f"いまきたのは{display_name}だよ")
 
         elif before.channel is not None and after.channel is None:
             if before.channel == self.vc.channel:
-                await self.speak(f"ばいばい{display_name}")
+                await self.request_speech(f"ばいばい{display_name}")
 
 
     # --------------------
-    # 非同期で読み上げ
+    # 読み上げの入口
     # --------------------
-    async def speak(self, text):
+    async def request_speech(self, text):
         if not self.vc:
             return
         
         if len(self.queue) >= 4:
             print("キュー上限")
+            
+            channel = self.bot.get_channel(self.text_channel_id)
+            if channel:
+                await channel.send("もう少し時間をおいてね")
+
             return
 
-        asyncio.create_task(self._prepare_audio(text))
+        asyncio.create_task(self._handle_tts_request(text))
+
+
+    # --------------------
+    # 読み上げ関数の制御
+    # --------------------
+    async def _handle_tts_request(self, text):
+        audio_data = await self._generate_audio(text)
+
+        if not audio_data:
+            return
+
+        self._enqueue_audio(audio_data)
+
+        if not self.is_playing:
+            await self.play_from_queue()
+
+
+    # --------------------
+    # TTS生成（読み上げ）
+    # --------------------
+    async def _generate_audio(self, text):
+        async with self.semaphore:
+            try:
+                audio_data = await tts.talk(self.session, text, self.style_id)
+                return audio_data
+
+            except Exception as e:
+                print(f"TTS error: {e}")
+                return None
 
 
     # --------------------
     # キューに追加（読み上げ）
     # --------------------
-    async def _prepare_audio(self, text):
-        async with self.semaphore:
-            try:
-                audio_data = await tts.talk(self.session, text, self.style_id)
-
-            except Exception as e:
-                print(f"TTS error: {e}")
-                return
-
-
+    def _enqueue_audio(self, audio_data):
         filename = f"{uuid.uuid4()}.wav"
         file_path = os.path.join(AUDIO_DIR, filename)
 
@@ -157,14 +182,11 @@ class VoiceCog(commands.Cog):
 
         self.queue.append(file_path)
 
-        if not self.is_playing:
-            await self.play_next()
-
 
     # --------------------
     # 再生（読み上げ）
     # --------------------
-    async def play_next(self):
+    async def play_from_queue(self):
         if not self.queue:
             self.is_playing = False
             return
@@ -190,7 +212,7 @@ class VoiceCog(commands.Cog):
 
 
             asyncio.run_coroutine_threadsafe(
-                self.play_next(),
+                self.play_from_queue(),
                 self.bot.loop
             )
 
