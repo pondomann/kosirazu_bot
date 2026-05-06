@@ -14,7 +14,7 @@ class CommandCog(commands.Cog):
     # --------------------
     # VC参加
     # --------------------
-    @app_commands.command(name="join")
+    @app_commands.command(name="join", description="ボイスチャンネルに参加するよ")
     async def join(self, interaction: discord.Interaction):
         await interaction.response.defer()
 
@@ -43,7 +43,7 @@ class CommandCog(commands.Cog):
     # --------------------
     # VC退出
     # --------------------
-    @app_commands.command(name="leave")
+    @app_commands.command(name="leave", description="ボイスチャンネルから退出するよ")
     async def leave(self, interaction: discord.Interaction):
         voice = self.get_voice()
 
