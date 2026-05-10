@@ -15,14 +15,17 @@ COEIROINKを使用しています。
 
 ---
 
+## ■ Requirements
+- Python 3.11
+
 ## ■ Setup
 
-Discord Developer Portal でBotを作成します。  
-必要な権限を設定します。管理者を付与すれば不足なく動作します。  
+* Discord Developer Portal でBotを作成します。  
+必要な権限（管理者とすれば不足はありません）を付与し、  
 利用したいサーバーにBotを導入してください。
 
 ```bash
-git clone [<repo-url>](https://github.com/pondomann/kosirazu_bot.git)
+git clone https://github.com/pondomann/kosirazu_bot.git
 cd kosirazu_bot
 python -m venv venv
 python -m pip install -r requirements.txt
