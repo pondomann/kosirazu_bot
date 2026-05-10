@@ -24,6 +24,9 @@ COEIROINKを使用しています。
 必要な権限（管理者とすれば不足はありません）を付与し、  
 利用したいサーバーにBotを導入してください。
 
+* COEIROINKと、MYCOEのコシラズをインストールします。  
+（ローカルで起動する必要があるため）
+
 ```bash
 git clone https://github.com/pondomann/kosirazu_bot.git
 cd kosirazu_bot
@@ -56,5 +59,5 @@ python main.py
 
 ## ■ Notes
 
-* ローカルでCOEIROINKが必要です
 * 現在は単一ギルド想定です
+* Windows + VSCodeで動作確認
