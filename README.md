@@ -1,22 +1,24 @@
 # Kosirazu Bot
-### (Discord TTS Bot)
 
-Discordのボイスチャンネルでテキストを読み上げるBotです。
-COEIROINKを使用しています。
+Discordのボイスチャンネルでテキストを読み上げるBotのコードです。
+ローカルで起動したCOEIROINKのAPIと、  
+MYCOEIROINKトークモデル「コシラズ」を利用して音声合成します。
 
 ---
 
 ## ■ Features
 
-* テキスト読み上げ（発言者がわかるよう、名前も読み上げます）
+* テキスト読み上げ（連続の投稿でない場合、発言者名も読み上げます）
 * メンバーの入退室通知
-* 話し方（感情）変更（/set_style）
+* 話し方の変更（/set_style）
 * キュー再生
 
 ---
 
 ## ■ Requirements
 - Python 3.11
+
+---
 
 ## ■ Setup
 
@@ -25,7 +27,7 @@ COEIROINKを使用しています。
 利用したいサーバーにBotを導入してください。
 
 * COEIROINKと、MYCOEのコシラズをインストールします。  
-（ローカルで起動する必要があるため）
+（コシラズ以外の音声ライブラリを利用する場合はconfig.pyを編集してください。）
 
 ```bash
 git clone https://github.com/pondomann/kosirazu_bot.git
@@ -54,6 +56,21 @@ python main.py
 * /join
 * /leave
 * /set_style
+
+---
+
+## ■ Credits
+
+このプロジェクトでは、COEIROINK を利用して音声合成を行っています。
+COEIROINKの利用規約をお守りください。
+https://coeiroink.com/terms
+
+本リポジトリには、COEIROINK本体および音声ライブラリは含まれていません。
+利用する際は、各音声ライブラリの利用規約・ライセンスをご確認ください。
+
+音声ライブラリを利用する場合は、必要に応じてクレジット表記を行ってください。
+
+COEIROINK:コシラズ
 
 ---
 
