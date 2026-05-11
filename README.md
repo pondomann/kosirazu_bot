@@ -1,7 +1,7 @@
 # Kosirazu Bot
 
-Discordのボイスチャンネルでテキストを読み上げるBotのコードです。
-ローカルで起動したCOEIROINKのAPIと、  
+Discordのボイスチャンネルでテキストを読み上げるBotのコードです。  
+ローカルで起動したCOEIROINKのAPIと  
 MYCOEIROINKトークモデル「コシラズ」を利用して音声合成します。
 
 ---
@@ -61,11 +61,11 @@ python main.py
 
 ## ■ Credits
 
-このプロジェクトでは、COEIROINK を利用して音声合成を行っています。
-COEIROINKの利用規約をお守りください。
+このプロジェクトでは、COEIROINK を利用して音声合成を行っています。  
+COEIROINKの利用規約をお守りください。  
 https://coeiroink.com/terms
 
-本リポジトリには、COEIROINK本体および音声ライブラリは含まれていません。
+本リポジトリには、COEIROINK本体および音声ライブラリは含まれていません。  
 利用する際は、各音声ライブラリの利用規約・ライセンスをご確認ください。
 
 音声ライブラリを利用する場合は、必要に応じてクレジット表記を行ってください。
