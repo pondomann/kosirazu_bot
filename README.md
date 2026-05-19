@@ -59,16 +59,16 @@ python main.py
 
 ---
 
-## ■ Credits
+## ■ License
 
-このプロジェクトでは、COEIROINK を利用して音声合成を行っています。  
-COEIROINKの利用規約をお守りください。  
-https://coeiroink.com/terms
+このプロジェクトのコードは MIT License のもとで公開されています。  
 
-本リポジトリには、COEIROINK本体および音声ライブラリは含まれていません。  
-利用する際は、各音声ライブラリの利用規約・ライセンスをご確認ください。
+なお、本リポジトリには、COEIROINK本体および音声ライブラリは含まれていません。  
+COEIROINK 本体および各音声ライブラリには、それぞれ個別の利用規約・ライセンスが適用されます。  
+ご利用の際は、各配布元の規約をご確認ください。  
 
-音声ライブラリを利用する場合は、必要に応じてクレジット表記を行ってください。
+COEIROINK利用規約  
+https://coeiroink.com/terms  
 
 COEIROINK:コシラズ
 
